@@ -3,7 +3,7 @@
 
 all of this is vibecoded and copilot wrote the readme below, because i cannot be bothered. im js cleaning up my pc and archiving my script folder.
 
-# TikTok photo downloader captioner and telegram sender
+# TikTok photo downloader, captioner, and telegram sender
 
 ## Setup
 
