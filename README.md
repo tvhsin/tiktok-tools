@@ -12,10 +12,8 @@ Set-Location 'E:\Scripts\tiktok post downloader'
 python -m pip install -U "yt-dlp[default,curl-cffi]" pillow requests img2pdf
 ```
 
-`download_parts.py` needs a valid TikTok `cookies.txt` in this folder. Keep
-it private. The Telegram bot token is configured inside
-`caption_and_send.py`; keep that file private too and revoke the token if it
-has been exposed.
+`download_parts.py` needs a valid TikTok `cookies.txt` in this folder. Get it using "Get cookies.txt LOCALLY" extension. The Telegram bot token is inside
+`caption_and_send.py`;
 
 ## Download photo posts
 
