@@ -63,46 +63,54 @@ chat. To send the original images with Telegram captions instead:
 python .\caption_and_send.py send --raw
 ```
 
-## `caption_and_send.py` actions and flags
+## Caption tool: options in plain English
 
-The command takes one or more actions: `embed`, `send`, and `delete`.
-Actions can be combined, for example:
+The words after the script say what to do:
+
+- `embed` puts the caption on each picture.
+- `send` sends pictures to Telegram.
+- `delete` removes messages the script sent.
+
+You can combine actions: `embed send` captions the pictures, then sends them.
+With no extra options, `send` sends the already-captioned pictures.
+
+### Pick pictures or change how they are sent
+
+- `--start 5 --end 14` handles only pictures 5 through 14. By default it
+  handles 5 through 124.
+- `--test` with `embed` captions only the first picture in the chosen range.
+  It will not send anything, even if you also wrote `send`.
+- `--raw` sends the original pictures with captions in Telegram, instead of
+  sending pictures with text drawn on them.
+- `--both` sends the pictures with text drawn on them and also puts the
+  caption in Telegram.
+- `--album` groups up to 10 pictures into each Telegram album.
+- `--as-file` sends them as files instead of Telegram photos.
+
+Examples:
 
 ```powershell
-python .\caption_and_send.py embed send
+python .\caption_and_send.py embed --test
+python .\caption_and_send.py send --raw --start 5 --end 14
+python .\caption_and_send.py send --album
+python .\caption_and_send.py send --both --as-file
 ```
 
-| Flag | What it does |
-|---|---|
-| `--raw` | For `send`, sends the original numbered images and adds each caption as Telegram text. |
-| `--as-file` | Sends images as Telegram documents instead of photos. |
-| `--start N` | First image number to process/send. Default: `5`. |
-| `--end N` | Last image number to process/send. Default: `124`. |
-| `--test` | With `embed`, embeds only the image specified by `--start`. It also prevents the `send` action from sending. |
-| `--both` | For `send`, sends the captioned output images and includes Telegram captions too. |
-| `--album` | For `send`, groups images in albums of up to 10. |
-| `--probe` | With `delete`, sends a marker message and attempts to delete a recent range of message IDs instead of using the log. |
-| `--all` | With `delete`, asks for confirmation, then attempts to delete every message ID before and including the marker. |
-| `--count N` | Sets how far back `delete --probe` sweeps. Default: `150`. |
+### Delete sent Telegram messages
 
-By default, `send` uses the captioned files in `captioned\` without a
-Telegram caption. `--raw` switches to the original files with Telegram
-captions. `--both` sends the captioned files with Telegram captions; if
-`--raw` and `--both` are used together, `--both` takes precedence and the
-captioned files are sent.
-
-`delete` by itself uses `sent_ids.json` and removes that log after the
-attempt. `delete --probe` and `delete --all` do not use the log and can
-delete other bot messages in the configured chat. `--all` is especially
-destructive; only confirm if that is intended.
-
-Successful Telegram sends are logged in
-`readmewhenyouneedme\captioned\sent_ids.json`. Delete only those logged
-messages with:
+Normally, `delete` removes only message IDs saved in
+`captioned\sent_ids.json`:
 
 ```powershell
 python .\caption_and_send.py delete
 ```
+
+If the messages are not in that log, `delete --probe` tries the latest 150
+message IDs. Change that number with `--count`, for example
+`delete --probe --count 300`.
+
+`delete --all` tries every message ID in the chat and asks you to type `yes`.
+It may delete other bot messages too; use it only if you really want that.
 
 ## Make PDFs
 
