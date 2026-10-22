@@ -63,11 +63,38 @@ chat. To send the original images with Telegram captions instead:
 python .\caption_and_send.py send --raw
 ```
 
-Other options: `--test` embeds only the first image; `--start N --end N`
-limits the image range; `--album` sends groups of up to 10; `--as-file`
-sends documents instead of compressed Telegram photos. `embed send` does
-both steps in one run. `--both` adds Telegram captions as well as embedded
-text.
+## `caption_and_send.py` actions and flags
+
+The command takes one or more actions: `embed`, `send`, and `delete`.
+Actions can be combined, for example:
+
+```powershell
+python .\caption_and_send.py embed send
+```
+
+| Flag | What it does |
+|---|---|
+| `--raw` | For `send`, sends the original numbered images and adds each caption as Telegram text. |
+| `--as-file` | Sends images as Telegram documents instead of photos. |
+| `--start N` | First image number to process/send. Default: `5`. |
+| `--end N` | Last image number to process/send. Default: `124`. |
+| `--test` | With `embed`, embeds only the image specified by `--start`. It also prevents the `send` action from sending. |
+| `--both` | For `send`, sends the captioned output images and includes Telegram captions too. |
+| `--album` | For `send`, groups images in albums of up to 10. |
+| `--probe` | With `delete`, sends a marker message and attempts to delete a recent range of message IDs instead of using the log. |
+| `--all` | With `delete`, asks for confirmation, then attempts to delete every message ID before and including the marker. |
+| `--count N` | Sets how far back `delete --probe` sweeps. Default: `150`. |
+
+By default, `send` uses the captioned files in `captioned\` without a
+Telegram caption. `--raw` switches to the original files with Telegram
+captions. `--both` sends the captioned files with Telegram captions; if
+`--raw` and `--both` are used together, `--both` takes precedence and the
+captioned files are sent.
+
+`delete` by itself uses `sent_ids.json` and removes that log after the
+attempt. `delete --probe` and `delete --all` do not use the log and can
+delete other bot messages in the configured chat. `--all` is especially
+destructive; only confirm if that is intended.
 
 Successful Telegram sends are logged in
 `readmewhenyouneedme\captioned\sent_ids.json`. Delete only those logged
@@ -76,10 +103,6 @@ messages with:
 ```powershell
 python .\caption_and_send.py delete
 ```
-
-`delete --probe` sweeps recent message IDs not in the log. `delete --all`
-attempts to sweep all message IDs in the chat; either can delete unrelated
-bot messages, so use them only if that is intended.
 
 ## Make PDFs
 
